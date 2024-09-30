@@ -21,15 +21,28 @@ async function problem_02_process(params) {
         const input_file_data = await file_reader(input_file_path);
         console.log("file read successfully");
 
-
         await convert_to_uppercase(input_file_data, uppercase_file_path);
         console.log("uppercase file updated successfull..!");
 
         await store_filenames(uppercase_file_path);
         console.log("filenames.txt updated..!");
+
+        const uppercase_file_content = await file_reader(uppercase_file_path);
+        await convert_to_lowercase(uppercase_file_content, lowercase_file_path);
+        console.log("lowercase.txt updated..!");
         
+        
+        await store_filenames(lowercase_file_path);
+        console.log("filenames.txt updated..!");            
+        
+        const lowercase_file_content = await file_reader(lowercase_file_path);
+        await sort_content(lowercase_file_content, sorted_file_path);
+        console.log("sorted.txt updated..!");
 
-
+        await store_filenames(sorted_file_path);
+        console.log("filenames.txt updated..!");
+        
+                
 
     } catch (error) {
 
@@ -39,6 +52,7 @@ async function problem_02_process(params) {
 problem_02_process();
 
 
+// Store the name of the new file in filenames.txt
 function store_filenames(file) {
     return new Promise((resolve, reject) => {
         fs.appendFile(filenames_path, file + "\n", (err) => {
@@ -79,8 +93,25 @@ function file_writer(data, filePath) {
     });
 }
 
+
+// 2. Convert the content to uppercase & write to a new file. 
 function convert_to_uppercase(content, filePath) {
     const uppercase_content = content.toUpperCase();
 
     return file_writer(uppercase_content, filePath);
+}
+
+// function to convert file content to lower case. Then split the contents into sentences. 
+function convert_to_lowercase(content, filePath) {
+    const lowercase_content = content.toLowerCase();
+    const sentences = lowercase_content.split(/(?<=[.!?])\s+/);
+
+    return file_writer(sentences.join(" "), filePath);
+}
+
+
+function sort_content(data, filePath) {
+    const file_data_sorted = data.split(" ").sort((a,b) => a.localeCompare(b)).join("\n");
+
+    return file_writer(file_data_sorted, filePath);
 }
