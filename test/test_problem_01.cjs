@@ -1,16 +1,16 @@
 const path = require("path");
 
-const { make_directory } = require("../problem_01.cjs");
+const { make_directory, json_file_generator } = require("../problem_01.cjs");
 
 
-const folder = path.join(__dirname, "json-files");
+const folder = path.join(__dirname, "../json-files");
 
 async function problem_01_process(count) {
     try {
         await make_directory(folder);
         console.log("Directory created..!");
 
-        const json_files = await generate_json_file(count);
+        const json_file = await json_file_generator(count, folder);
         console.log("json files generated..!");
 
 
@@ -20,4 +20,4 @@ async function problem_01_process(count) {
     }
 }
 
-problem_01_process();
+problem_01_process(4);
