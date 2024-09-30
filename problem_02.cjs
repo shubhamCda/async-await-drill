@@ -30,19 +30,23 @@ async function problem_02_process(params) {
         const uppercase_file_content = await file_reader(uppercase_file_path);
         await convert_to_lowercase(uppercase_file_content, lowercase_file_path);
         console.log("lowercase.txt updated..!");
-        
-        
+
+
         await store_filenames(lowercase_file_path);
-        console.log("filenames.txt updated..!");            
-        
+        console.log("filenames.txt updated..!");
+
         const lowercase_file_content = await file_reader(lowercase_file_path);
         await sort_content(lowercase_file_content, sorted_file_path);
         console.log("sorted.txt updated..!");
 
         await store_filenames(sorted_file_path);
         console.log("filenames.txt updated..!");
-        
-                
+
+        const filenames_content = await file_reader(filenames_path);
+        await delete_files(filenames_content);
+        console.log("Deleted successfully..!");     
+
+
 
     } catch (error) {
 
@@ -58,7 +62,7 @@ function store_filenames(file) {
         fs.appendFile(filenames_path, file + "\n", (err) => {
             if (err) {
                 reject(err);
-            }else{
+            } else {
                 resolve("");
             }
         });
@@ -111,7 +115,26 @@ function convert_to_lowercase(content, filePath) {
 
 
 function sort_content(data, filePath) {
-    const file_data_sorted = data.split(" ").sort((a,b) => a.localeCompare(b)).join("\n");
+    const file_data_sorted = data.split(" ").sort((a, b) => a.localeCompare(b)).join("\n");
 
     return file_writer(file_data_sorted, filePath);
+}
+
+// function to iterate list and delete all the new files that are mentioned in that list simultaneously.
+function delete_files(file) {
+    const seperate = file.split("\n").filter(Boolean);
+
+    const remove_files = seperate.map((link) => {
+        new Promise((resolve, reject) => {
+            fs.unlink(link, (err) => {
+                if (err) {
+                    reject(err);
+                }else{
+                    resolve(link);
+                }
+            });
+        });
+    });
+    return Promise.all(remove_files);
+
 }
