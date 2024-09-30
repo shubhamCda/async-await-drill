@@ -19,10 +19,16 @@ const filenames_path = path.join(__dirname, "filenames.txt");
 async function problem_02_process(params) {
     try {
         const input_file_data = await file_reader(input_file_path);
+        console.log("file read successfully");
         
-        
+
+        await convert_to_uppercase(input_file_data, uppercase_file_path);
+        console.log("uppercase file updated successfull..!");
+
+
+
     } catch (error) {
-        
+
     }
 }
 
@@ -35,9 +41,29 @@ function file_reader(filePath) {
         fs.readFile(filePath, "utf-8", (err, data) => {
             if (err) {
                 reject(err)
-            }else{
+            } else {
                 resolve(data);
             }
         })
     })
+}
+
+
+//function to write files.
+function file_writer(data, filePath) {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(filePath, data, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve("");
+            }
+        });
+    });
+}
+
+function convert_to_uppercase(content, filePath) {
+    const uppercase_content = content.toUpperCase();
+
+    return file_writer(uppercase_content, filePath);
 }
