@@ -20,10 +20,14 @@ async function problem_02_process(params) {
     try {
         const input_file_data = await file_reader(input_file_path);
         console.log("file read successfully");
-        
+
 
         await convert_to_uppercase(input_file_data, uppercase_file_path);
         console.log("uppercase file updated successfull..!");
+
+        await store_filenames(uppercase_file_path);
+        console.log("filenames.txt updated..!");
+        
 
 
 
@@ -33,6 +37,19 @@ async function problem_02_process(params) {
 }
 
 problem_02_process();
+
+
+function store_filenames(file) {
+    return new Promise((resolve, reject) => {
+        fs.appendFile(filenames_path, file + "\n", (err) => {
+            if (err) {
+                reject(err);
+            }else{
+                resolve("");
+            }
+        });
+    });
+}
 
 
 // 1. Read the given input file.
