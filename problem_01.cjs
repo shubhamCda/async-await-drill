@@ -1,7 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
-
+/*
+    Problem 1:
+    
+    Using async await functions, do the following:
+        1. Create a directory of random JSON files
+        2. Delete those files simultaneously 
+*/
 
 //function to make new directory
 function make_directory(dirPath) {
@@ -18,9 +24,9 @@ function make_directory(dirPath) {
 }
 
 
+//function to generate random json files
 function json_file_generator(count, dirPath) {
     const promise_values = [];
-
 
     for (let index = 1; index <= count; index++) {
         const json_file = path.join(dirPath, `json_file_${index}.json`);
@@ -46,6 +52,7 @@ function json_file_generator(count, dirPath) {
 }
 
 
+// function to delete files simultaneously 
 function delete_files(files) {
        
     const remove_files = files.map((link) => {
