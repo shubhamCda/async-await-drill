@@ -2,25 +2,9 @@ const fs = require("fs");
 const path = require("path");
 
 
-const folder = path.join(__dirname, "json-files");
 
-async function problem_01_process(count) {
-    try {
-        await make_directory(folder);
-        console.log("Directory created..!");
-
-        const json_files = await generate_json_file(count);
-        console.log("json files generated..!");
-        
-
-    } catch (error) {
-
-    }
-}
-
-problem_01_process();
-
-async function make_directory(dirPath) {
+//function to make new directory
+function make_directory(dirPath) {
     return new Promise((resolve, reject) => {
         fs.mkdir(dirPath, { recursive: true }, (err) => {
             if (err) {
@@ -30,5 +14,35 @@ async function make_directory(dirPath) {
             }
         })
     })
+
 }
 
+
+function json_file_generator(count, dirPath) {
+    const promise_values = [];
+    
+    
+    for (let index = 1; index <= count; index++) {
+        const json_file = path.join(dirPath, `json_file_${index}.json`);
+        const json_data = JSON.stringify({
+            username: 'shubham',
+            gender: 'male'
+        });       
+
+        const p = new Promise((resolve, reject) => {
+            fs.writeFile(json_file, json_data, (err, file) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(file);
+                }
+            });
+        });
+        promise_values.push(p);
+
+    }
+    return Promise.all(promise_values)
+}
+
+
+module.exports = { make_directory, json_file_generator };
