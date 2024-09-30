@@ -9,57 +9,11 @@ const path = require("path");
 
 */
 
-const input_file_path = path.join(__dirname, "lipsum.txt");
-const uppercase_file_path = path.join(__dirname, "uppercase.txt");
-const lowercase_file_path = path.join(__dirname, "lowercase.txt");
-const sorted_file_path = path.join(__dirname, "sorted.txt");
-const filenames_path = path.join(__dirname, "filenames.txt");
-
-
-async function problem_02_process(params) {
-    try {
-        const input_file_data = await file_reader(input_file_path);
-        console.log("file read successfully");
-
-        await convert_to_uppercase(input_file_data, uppercase_file_path);
-        console.log("uppercase file updated successfull..!");
-
-        await store_filenames(uppercase_file_path);
-        console.log("filenames.txt updated..!");
-
-        const uppercase_file_content = await file_reader(uppercase_file_path);
-        await convert_to_lowercase(uppercase_file_content, lowercase_file_path);
-        console.log("lowercase.txt updated..!");
-
-
-        await store_filenames(lowercase_file_path);
-        console.log("filenames.txt updated..!");
-
-        const lowercase_file_content = await file_reader(lowercase_file_path);
-        await sort_content(lowercase_file_content, sorted_file_path);
-        console.log("sorted.txt updated..!");
-
-        await store_filenames(sorted_file_path);
-        console.log("filenames.txt updated..!");
-
-        const filenames_content = await file_reader(filenames_path);
-        await delete_files(filenames_content);
-        console.log("Deleted successfully..!");     
-
-
-
-    } catch (error) {
-
-    }
-}
-
-problem_02_process();
-
 
 // Store the name of the new file in filenames.txt
-function store_filenames(file) {
+function store_filenames(filePath, file) {
     return new Promise((resolve, reject) => {
-        fs.appendFile(filenames_path, file + "\n", (err) => {
+        fs.appendFile(filePath, file + "\n", (err) => {
             if (err) {
                 reject(err);
             } else {
@@ -129,7 +83,7 @@ function delete_files(file) {
             fs.unlink(link, (err) => {
                 if (err) {
                     reject(err);
-                }else{
+                } else {
                     resolve(link);
                 }
             });
@@ -138,3 +92,5 @@ function delete_files(file) {
     return Promise.all(remove_files);
 
 }
+
+module.exports = { file_reader, convert_to_uppercase, convert_to_lowercase, delete_files, sort_content, store_filenames };
