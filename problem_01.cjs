@@ -9,6 +9,26 @@ const path = require("path");
         2. Delete those files simultaneously 
 */
 
+const folder = path.join(__dirname, "json-files");
+
+async function problem_01_async_function(count) {
+    try {
+        await make_directory(folder);
+        console.log("Directory created..!");
+
+        const json_file = await json_file_generator(count, folder);      
+        console.log("json files generated..!");
+
+        await delete_files(json_file);
+        console.log("Deleted successfully..!");
+        
+
+    } catch (error) {
+        console.log("Something is wrong..!", error);
+
+    }
+}
+
 //function to make new directory
 function make_directory(dirPath) {
     return new Promise((resolve, reject) => {
@@ -71,4 +91,4 @@ function delete_files(files) {
 }
 
 
-module.exports = { make_directory, json_file_generator, delete_files };
+module.exports = { problem_01_async_function };
